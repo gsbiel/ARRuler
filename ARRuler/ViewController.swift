@@ -15,6 +15,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     @IBOutlet var sceneView: ARSCNView!
     
     private var dotNodes = [SCNNode]()
+    private var textNode = SCNNode()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,6 +47,14 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+        // Removendo os pontos caso um terceiro seja inserido. Indicando que uma nova medida vai ser feita
+        if dotNodes.count >= 2 {
+            for dot in dotNodes {
+                dot.removeFromParentNode()
+            }
+            dotNodes = [SCNNode]()
+        }
         if let touchLocation = touches.first?.location(in: sceneView){
             
             //.featurePoint detecta a localizacao de um ponto em uma superficie horizontal presente no Scene, se existir.
@@ -106,11 +115,14 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     private func updateText(text : String, atPosition position: SCNVector3) {
         
+        // Removendo o texto exibido da medida anterior (se tiver)
+        textNode.removeFromParentNode()
+        
         let textGeometry = SCNText(string: text, extrusionDepth: 1.0)
         
         textGeometry.firstMaterial?.diffuse.contents = UIColor.red
         
-        let textNode = SCNNode(geometry: textGeometry)
+        textNode = SCNNode(geometry: textGeometry)
         
         textNode.position = SCNVector3(position.x, position.y + 0.01, position.z)
         

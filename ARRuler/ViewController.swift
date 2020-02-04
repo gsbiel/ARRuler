@@ -100,6 +100,22 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // Calculando a distancia entre os dois pontos
         let distance = sqrt(a * a + b * b + c * c)
         
+        updateText(text: "\(distance)", atPosition: end.position)
 
+    }
+    
+    private func updateText(text : String, atPosition position: SCNVector3) {
+        
+        let textGeometry = SCNText(string: text, extrusionDepth: 1.0)
+        
+        textGeometry.firstMaterial?.diffuse.contents = UIColor.red
+        
+        let textNode = SCNNode(geometry: textGeometry)
+        
+        textNode.position = SCNVector3(position.x, position.y + 0.01, position.z)
+        
+        textNode.scale = SCNVector3(0.01, 0.01, 0.01)
+        
+        sceneView.scene.rootNode.addChildNode(textNode)
     }
 }

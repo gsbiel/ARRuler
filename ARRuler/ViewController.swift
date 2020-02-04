@@ -14,6 +14,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 
     @IBOutlet var sceneView: ARSCNView!
     
+    private var dotNodes = [SCNNode]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -79,5 +81,25 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // Inserindo o node no espaco 3D(Scene)
         sceneView.scene.rootNode.addChildNode(doteNode)
         
+        dotNodes.append(doteNode)
+        
+        if dotNodes.count >= 2 {
+            calculate()
+        }
+    }
+    
+    private func calculate() {
+        let start = dotNodes[0]
+        let end = dotNodes[1]
+    
+        // Os pontos nunca estarao exatamente no mesmo ponto, pois pode haver ligeiras diferencas de altura entre os pontos que o usuario clicar (mesmo que seja em uma mesa, por exemplo)
+        // Entao, para termos mais precisao, temos que supor que sao pontos em um espaco 3D mesmo.
+        let a = start.position.x - end.position.x
+        let b = start.position.y - end.position.y
+        let c = start.position.z - end.position.z
+        // Calculando a distancia entre os dois pontos
+        let distance = sqrt(a * a + b * b + c * c)
+        
+
     }
 }
